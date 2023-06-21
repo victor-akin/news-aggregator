@@ -1,0 +1,65 @@
+services:
+
+  backend:
+    container_name: api
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./api
+      dockerfile: ./api.Dockerfile
+    volumes:
+      - ./api:/var/www
+    networks:
+      - app-network
+
+  client:
+    container_name: client
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - backend
+    build:
+      context: ./client
+      dockerfile: ./client.Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/usr/src
+    networks:
+      - app-network
+
+  database:
+    image: mysql:8.0
+    container_name: database
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DATABASE: news-aggregator
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_ROOT_PASSWORD:
+    volumes:
+      - dbdata:/var/lib/mysql/
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8008:80"
+    volumes:
+      - ./api:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+volumes:
+  dbdata:
+
+
+networks:
+  app-network:
+    driver: bridge
