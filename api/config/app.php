@@ -185,4 +185,20 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    /*
+    |--------------------------------------------------------------------------
+    |
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'elastic_search_host' => env('ELASTIC_SEARCH_HOST'),
+    'newsapi_key' => env('NEWSAPI_KEY'),
+    'the_guardian_api_key' => env('THE_GUARDIAN_API_KEY'),
+    'nytimes_app_id' => env('NYTIMES_APP_ID'),
+    'nytimes_key' => env('NYTIMES_KEY'),
+    'nytimes_secret' => env('NYTIMES_SECRET'),
+    'mediastack_key' => env('MEDIASTACK_KEY'),
+    'newswatcher_key' => env('NEWSWATCHER_KEY'),
+
 ];
