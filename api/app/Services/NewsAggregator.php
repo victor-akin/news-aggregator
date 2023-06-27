@@ -12,9 +12,9 @@ class NewsAggregator
 
     public $aggregator_result_set = [];
 
-    public function __construct()
+    public function __construct(ElasticSearchService $searchService)
     {
-        $this->elasticSearchService = new ElasticSearchService;
+        $this->elasticSearchService = $searchService;
     }
 
     /**
@@ -47,8 +47,18 @@ class NewsAggregator
         return $api_handler->result_set;
     }
 
-    public function search(string $search_term, array $search_filter)
+    public function search(string $search_term, array $search_filter, int $from = 0)
     {
         return $this->elasticSearchService->search($this->index, $search_term, $search_filter);
+    }
+
+    public function getLatest(int $from = 0)
+    {
+        return $this->elasticSearchService->getLatest($this->index, $from);
+    }
+
+    public function getUserNewsFeed(array $interests, $from = 0)
+    {
+        return $this->elasticSearchService->getFeed($this->index, $interests, $from);
     }
 }

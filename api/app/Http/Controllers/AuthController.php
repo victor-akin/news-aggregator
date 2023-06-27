@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Response;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -19,15 +19,16 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+
             $request->session()->regenerate();
 
-            return Response::json(['message' => 'login successful']);
+            return Response::json(['message' => 'Login successful']);
         }
 
-        return Response::json(['message' => 'wrong login credentials'], 403);
+        return Response::json(['message' => 'Wrong login credentials'], 403);
     }
 
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -36,16 +37,24 @@ class AuthController extends Controller
         ]);
 
         if(User::where('email', $request->email)->exists()) {
-            return Response::json(['message' => 'email already exists'], 400);
+
+            return Response::json(['message' => 'Email already exists'], 400);
         }
 
         $user = User::create([
-            'name' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $request->username,
             'email_verified_at' => now(),
+            'password' => Hash::make($request->password),
         ]);
 
-        if($user) return Response::json(['message' => 'Registration successfull. You can now login']);
+        if($user) return Response::json(['message' => 'Registration successful. You can now login']);
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        Auth::logout();
+
+        return Response::json(['message' => 'Successfully logged out']);
     }
 }

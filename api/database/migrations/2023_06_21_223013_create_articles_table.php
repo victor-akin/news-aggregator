@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('source_id');
-            $table->text('source_article');
+            $table->mediumText('source_article');
             $table->json('formatted_article')->nullable();
             $table->timestamps();
         });

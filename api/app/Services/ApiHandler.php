@@ -70,7 +70,7 @@ abstract class ApiHandler
             if(is_null($this->new_article)){
 
                 $this->new_article = Article::create([
-                    'source_id' => $this->source->getkey(),
+                    'source_id' => $this->source->getKey(),
                     'source_article' => $article,
                     'fingerprint' => $this->fingerprint,
                     'formatted_article' => $this->formatted_data

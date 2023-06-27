@@ -16,7 +16,7 @@ services:
     container_name: client
     command: sh -c "npm install && npm run dev"
     depends_on:
-      - backend
+      - server
     build:
       context: ./client
       dockerfile: ./client.Dockerfile
@@ -43,9 +43,9 @@ services:
     networks:
       - app-network
 
-  nginx:
+  server:
     image: nginx:alpine
-    container_name: nginx
+    container_name: server
     restart: unless-stopped
     tty: true
     ports:

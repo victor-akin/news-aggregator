@@ -10,7 +10,7 @@ class Article extends Model
 {
     use HasFactory;
 
-    protected $hidden = ['source_article'];
+    protected $hidden = ['created_at', 'updated_at', 'id', 'source_id'];
 
     protected $guarded = [];
 

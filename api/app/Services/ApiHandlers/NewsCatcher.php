@@ -30,9 +30,9 @@ class NewsCatcher extends ApiHandler
     {
         $url = $this->source->url;
 
-        if(isset($this->search_filter['latest'])){
+        if(empty($this->search_string)){
 
-            $url .= '/v2/latest_headlines?';
+            $url .= '/v2/latest_headlines?lang=en';
 
             return $url;
         }
@@ -43,7 +43,7 @@ class NewsCatcher extends ApiHandler
             $url .= '&from=' . $this->getDate($this->search_filter['date']);
         }
 
-        $url .= '&page_size=100';
+        $url .= '&page_size=100&lang=en';
 
         return $url;
     }

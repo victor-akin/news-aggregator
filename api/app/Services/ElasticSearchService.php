@@ -25,11 +25,11 @@ class ElasticSearchService {
         $this->client = $client;
     }
 
-    public function search(string $index, string $search_term, array $search_filter)
+    public function search(string $index, string $search_term, array $search_filter, int $from = 0)
     {
         try {
 
-            $params = $this->createParams($index, $search_term, $search_filter);
+            $params = $this->createParams($index, $search_term, $search_filter, $from);
 
             $response = $this->client->search($params);
 
@@ -44,8 +44,11 @@ class ElasticSearchService {
 
     }
 
-    public function createParams(string $index, string $search_term, array $search_filter)
+    public function createParams(string $index, string $search_term, array $search_filter, int $from = 0)
     {
+        $filter_string = $search_filter['category'] ?? '';
+        $filter_string .= $search_filter['source'] ?? '';
+
         if(isset($search_filter['date'])){
 
             $date = $search_filter['date'];
@@ -58,8 +61,8 @@ class ElasticSearchService {
                         'bool' => [
                             'must' => [
                                 'multi_match' => [
-                                    'query' => $search_term,
-                                    'fields' => $search_filter
+                                    'query' => "$search_term $filter_string",
+                                    'fields' => [...array_keys($search_filter), 'article', 'title', 'description']
                                 ]
                             ],
                             'filter' => [
@@ -70,7 +73,9 @@ class ElasticSearchService {
                                 ]
                             ]
                         ]
-                    ]
+                    ],
+                    'from' => $from,
+                    'size' => 20
                 ]
             ];
         }
@@ -80,11 +85,47 @@ class ElasticSearchService {
             'body'  => [
                 'query' => [
                     'multi_match' => [
-                        'query' => $search_term,
-                        'fields' => $search_filter
+                        'query' =>"$search_term $filter_string",
+                        'fields' => [...array_keys($search_filter), 'article', 'title', 'description']
                     ]
-                ]
+                ],
+                'from' => $from,
+                'size' => 20
             ]
         ];
+    }
+
+    public function getLatest(string $index, int $from)
+    {
+        return $this->client->search([
+            'index' => $index,
+            'body' => [
+                'query' => [
+                    'match' => [
+                        'date' => date('Y-m-d')
+                    ]
+                ],
+                'from' => $from,
+                'size' => 20
+            ]
+        ])->asArray();
+    }
+
+    public function getFeed(string $index, array $interests, int $from)
+    {
+        return $this->client->search([
+            'index' => $index,
+            'body' => [
+                'query' => [
+                    'multi_match' => [
+                        'query' => implode(' ', array_values($interests)),
+                        'fields' => ['article', 'title', 'description', 'author', 'source', 'category'],
+                        'type' => 'cross_fields',
+                    ],
+                ],
+                'from' => $from,
+                'size' => 20
+            ]
+        ])->asArray();
     }
 }
