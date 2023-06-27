@@ -3,4 +3,4 @@
 
 ## To run project
 - Run `docker compose up --build` in `news-aggregator` directory
-- Run `docker exec api sh -c 'bash run.sh'`
+- After docker is up and running enter this command `docker exec api sh -c 'bash run.sh'`

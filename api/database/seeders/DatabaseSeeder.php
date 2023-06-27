@@ -68,31 +68,31 @@ class DatabaseSeeder extends Seeder
         DB::table('sources')->insert([
             [
                 'url' => 'https://newsapi.org',
-                'crawler' => 'NewsApi',
+                'handler' => 'NewsApi',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'url' => 'https://content.guardianapis.com',
-                'crawler' => 'TheGuardian',
+                'handler' => 'TheGuardian',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'url' => 'https://api.nytimes.com',
-                'crawler' => 'NyTimes',
+                'handler' => 'NyTimes',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'url' => 'http://api.mediastack.com',
-                'crawler' => 'MediaStack',
+                'handler' => 'MediaStack',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'url' => 'https://api.newscatcherapi.com',
-                'crawler' => 'NewsCatcher',
+                'handler' => 'NewsCatcher',
                 'created_at' => now(),
                 'updated_at' => now()
             ]

@@ -28,8 +28,6 @@ export default function Profile() {
 
   const addToUserInterest = async (e: any, superGroupName: string, subGroupId: number) => {
     const [res, err] = await addUserInterests(superGroupName, subGroupId)
-    console.log('asss key', superGroupName);
-    console.log('newtwork add', res);
 
     if (!err) {
       updateUserInterests([...userInterests, res] as any);
@@ -68,7 +66,7 @@ export default function Profile() {
           <p className="my-6">Add something new you are interested in</p>
           {
             Object.keys(interests).map((key: any) => {
-              console.log('is key', key)
+
               return (interests as Array<any>)[key].map((subInterest: any) => {
                 return (
                   <button

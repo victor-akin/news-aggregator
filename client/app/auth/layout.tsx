@@ -18,7 +18,6 @@ export default function DashboardLayout({
     const isAuthenticated = async () => {
       const [user, error] = await getUser()
 
-      console.log(user);
       if (error) return router.push('/');
 
       setUser(user)

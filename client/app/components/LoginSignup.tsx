@@ -1,6 +1,6 @@
 'use client';
 import { FormEvent, useState } from "react";
-import { login, register } from "../utils/fetch-functions";
+import { getLatestNews, login, register } from "../utils/fetch-functions";
 import { useRouter } from 'next/navigation'
 
 type LoginSignupState = {
@@ -16,9 +16,7 @@ export default function LoginSignup() {
 
   const router = useRouter();
   const initState: LoginSignupState = {
-    isLogin: true,
-    password: 'password',
-    email: 'me@mailddd.com'
+    isLogin: true
   } as LoginSignupState
   const [state, updateState] = useState<LoginSignupState>(initState)
 
@@ -37,6 +35,8 @@ export default function LoginSignup() {
     }
 
     if (state.isLogin) return router.push('auth/articles')
+
+    if (!state.isLogin) await getLatestNews()
 
     updateHelper('successMessage', res.message)
   }

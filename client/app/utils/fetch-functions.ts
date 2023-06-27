@@ -30,6 +30,8 @@ export const getUserInterests = () => makeRequest(() => axios.get('api/user/prof
 
 export const deleteUserInterests = (id: number) => makeRequest(() => axios.delete(`api/user/profile/interests/${id}`));
 
+export const getLatestNews = () => makeRequest(() => axios.get('api/news/latest'));
+
 export const addUserInterests = (groupName: string, groupId: number) => (
   makeRequest(() => axios.post('api/user/profile/interests', {
     group_name: groupName, group_id: groupId

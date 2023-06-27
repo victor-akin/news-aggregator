@@ -10,19 +10,14 @@ use App\Models\NewsCategory;
 use Illuminate\Http\Request;
 use App\Services\NewsAggregator;
 use \Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 
 class NewsController extends Controller
 {
     public function getLatestNews(Request $request, NewsAggregator $news_aggregator): JsonResponse
     {
-        $res = $news_aggregator->getLatest((int) $request->query('from'));
-
-        $ids = array_map(function($val){
-            return $val['_source']['article_id'];
-        }, $res['hits']['hits']);
-
-        if(count($ids)) return Response::json(Article::whereIn('id', $ids)->get());
+        if(Cache::get('latest-news')) return Response::json(['message' => 'unavailable at the moment'], 400);
 
         $sources = Source::all();
 
@@ -31,6 +26,8 @@ class NewsController extends Controller
         });
 
         $articles = Article::whereIn('id', collect($news_aggregator->aggregator_result_set)->pluck('article_id'))->get();
+
+        Cache::add('latest-news', true, now()->addMinutes(3));
 
         return Response::json($articles);
     }
